@@ -1,16 +1,19 @@
+import connectToDB from '@/configs/db';
+import otpModel from '@/models/otp'
 const request = require('request');
 const handler = async (req, res) => {
 
-    if (req.method !== 'GET') {
+    connectToDB()
+
+    if (req.method !== 'POST') {
         return false;
     }
 
     const { phone } = req.body;
     const code = Math.floor(Math.random() * 99999)
 
-
-    console.log('phone =>', phone);
-    console.log('code =>', code);
+    const date = new Date();
+    const expTime = date.getTime() + 300000
 
     request.post({
         url: 'http://ippanel.com/api/select',
@@ -26,10 +29,14 @@ const handler = async (req, res) => {
             ]
         },
         json: true,
-    }, function (error, response, body) {
+    }, async function (error, response, body) {
         if (!error && response.statusCode === 200) {
             //YOU‌ CAN‌ CHECK‌ THE‌ RESPONSE‌ AND SEE‌ ERROR‌ OR‌ SUCCESS‌ MESSAGE
-            console.log(response.body);
+            await otpModel.create({
+                phone,
+                code,
+                expTime,
+            })
             return res.status(201).json({ message: "code sent successfully :))" })
 
         } else {
