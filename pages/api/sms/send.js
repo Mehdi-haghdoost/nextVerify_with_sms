@@ -11,6 +11,7 @@ const handler = async (req, res) => {
 
     const { phone } = req.body;
     const code = Math.floor(Math.random() * 99999)
+    console.log('code =>', code);
 
     const date = new Date();
     const expTime = date.getTime() + 300000

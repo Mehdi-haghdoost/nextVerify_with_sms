@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 function Index() {
@@ -5,6 +6,8 @@ function Index() {
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [isCodeSend, setIsCodeSend] = useState();
+
+  const router = useRouter()
 
   const sendCode = async (event) => {
     event.preventDefault()
@@ -24,6 +27,28 @@ function Index() {
 
   const verifyCode = async (event) => {
     event.preventDefault();
+
+    const res = await fetch('/api/sms/verify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ phone, code })
+    })
+
+    if (res.status === 200) {
+
+      alert('code is correct :))')
+
+      router.replace('/dashboard')
+
+    } else if (res.status === 410) {
+
+      alert('code is expired !! :))')
+    } else if (res.status === 409) {
+
+      alert('code is not correct !!')
+    }
   }
 
 

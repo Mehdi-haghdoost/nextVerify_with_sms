@@ -14,7 +14,7 @@ const handler = async (req, res) => {
         const date = new Date()
         const now = date.getTime();
 
-        if (top.expTime > now) {
+        if (otp.expTime > now) {
             return res.status(200).json({ message: 'code is correct :))' })
         } else {
             return res.status(410).json({ message: 'code is expired !! :))' })
